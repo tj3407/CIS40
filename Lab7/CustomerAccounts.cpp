@@ -1,124 +1,201 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
+// struct implementation storing customer data values
 struct CustomerAccount {
     string name;
     string address;
-    string cityStateZip;
+    string city;
+    string state;
+    int zip;
     string phoneNumber;
     int accountBalance;
     string dateOfLastPayment;
 };
 
 // Prototypes
-void populateData(CustomerAccount[], int);
-void printData(CustomerAccount[], int);
-void updateData(CustomerAccount[], int);
+void createEntry(vector<CustomerAccount> &);
+void searchEntry(vector<CustomerAccount>);
+void removeEntry(vector<CustomerAccount> &);
+void updateEntry(vector<CustomerAccount> &);
+void displayAllEntries(vector<CustomerAccount>);
 
 int main() {
-    int SIZE = 10;
-    CustomerAccount accounts[SIZE];
+    // vector to store collection of CustomerAccount types
+    vector<CustomerAccount> accounts;
     int selection;
 
+    // User menu implemented using a do-while loop and only exits
+    // the promps when user chooses the Quit option
     do {
-        cout << "Please select an option" << endl;
-        cout << "1: Populate Data" << endl;
-        cout << "2: Print All Data" << endl;
-        cout << "3: Update Entry" << endl;
-        cout << "4: Quit" << endl;
+        cout << endl << "Please select an option" << endl;
+        cout << "1: Create a new Entry" << endl;
+        cout << "2: Search an Entry" << endl;
+        cout << "3: Delete an Entry" << endl;
+        cout << "4: Update an Entry" << endl;
+        cout << "5: Display all Entries" << endl;
+        cout << "6: Quit" << endl;
 
         cin >> selection;
 
         if (selection == 1) {
-            populateData(accounts, SIZE);
+            // Create a new entry
+            createEntry(accounts);
         } else if (selection == 2) {
-            printData(accounts, SIZE);
+            // Search an entry
+            searchEntry(accounts);
         } else if (selection == 3) {
-            updateData(accounts, SIZE);
+            // Remove an entry
+            removeEntry(accounts);
         } else if (selection == 4) {
+            // Update an entry
+            updateEntry(accounts);
+        } else if (selection == 5) {
+            // Display all entries
+            displayAllEntries(accounts);
+        } else if (selection == 6) {
             cout << "Thank you" << endl;
         } else {
             cout << "Invalid Selection. Please try again" << endl;
         }
-    } while(selection != 4);
+    } while(selection != 6);
 
 }
 
-void populateData(CustomerAccount accounts[], int size) {
-    for (int i = 0; i < size; i++) {
-        cout << "Enter details for customer #" << i + 1 << endl;
-        cout << "Name: ";
-        cin >> accounts[i].name;
+// Method to create a new entry
+void createEntry(vector<CustomerAccount> &accounts) {
+    // Create a new instance of CustomerAccount struct
+    CustomerAccount customer;
 
-        cout << "Address: ";
-        cin >> accounts[i].address;
+    // Start of user input
+    cout << "Enter details for a new customer" << endl;
+    cout << "Name: ";
+    getline(cin >> ws, customer.name);
 
-        cout << "City, State, Zip: ";
-        cin >> accounts[i].cityStateZip;
+    cout << "Address: ";
+    getline(cin >> ws, customer.address);
 
-        cout << "Phone Number: ";
-        cin >> accounts[i].phoneNumber;
+    cout << "City: ";
+    getline(cin >> ws, customer.city);
 
-        do {
-            cout << "Account Balance: ";
-            cin >> accounts[i].accountBalance;
+    cout << "State: ";
+    getline(cin >> ws, customer.state);
 
-            if (accounts[i].accountBalance < 0) {
-                cout << "Invalid entry. Try again" << endl;
-            }
-        } while (accounts[i].accountBalance < 0);
+    cout << "Zip: ";
+    cin >> customer.zip;
 
-        cout << "Date of Last Payment: ";
-        cin >> accounts[i].dateOfLastPayment;
+    cout << "Phone Number: ";
+    getline(cin >> ws, customer.phoneNumber);
+
+    cout << "Account Balance: ";
+    cin >> customer.accountBalance;
+
+    cout << "Date of Last Payment: ";
+    getline(cin >> ws, customer.dateOfLastPayment);
+
+    // Add the new customer instance into the vector
+    accounts.push_back(customer);
+}
+
+
+// Method to search an entry
+void searchEntry(vector<CustomerAccount> accounts) {
+    string name;
+
+    cout << "Enter Customer's Name to search: ";
+    getline(cin >> ws, name);
+
+    for (int i = 0; i < accounts.size(); i++) {
+        if (accounts[i].name == name) {
+            cout << endl << "*******************" << endl;
+            cout << "Name: " << accounts[i].name << endl;
+            cout << "Address: " << accounts[i].address << endl;
+            cout << "City, State, Zip: " << accounts[i].city << " " << accounts[i].state << " " << accounts[i].zip << endl;
+            cout << "Phone: " << accounts[i].phoneNumber << endl;
+            cout << "Account Balance: " << accounts[i].accountBalance << endl;
+            cout << "Date of Last Payment: " << accounts[i].dateOfLastPayment << endl << "*******************" << endl;
+        } else {
+            cout << "*******************" << endl << "No customer by that name found! Please try again" << endl << "*******************" << endl;
+        }
     }
 }
 
-void printData(CustomerAccount accounts[], int size) {
+// Method to remove an entry
+void removeEntry(vector<CustomerAccount> &accounts) {
+    string name;
+
+    cout << "Enter Customer's Name to remove: ";
+    getline(cin >> ws, name);
+
+    for (int i = 0; i < accounts.size(); i++) {
+        if (accounts[i].name == name) {
+            accounts.erase(accounts.begin() + i);
+            cout << endl << "*******************" << endl << "Customer " << name << " has been deleted" << endl << "*******************" << endl;
+        } else {
+            cout << "*******************" << endl << "No customer by that name found! Please try again" << endl << "*******************" << endl;
+        }
+    }
+}
+
+// Method to update an entry
+void updateEntry(vector<CustomerAccount> &accounts) {
+    string name;
+    string input;
+    int numInput;
+    cout << "Enter Customer's Name to update: ";
+    getline(cin >> ws, name);
+
+    for (int i = 0; i < accounts.size(); i++) {
+        if (accounts[i].name == name) {
+            cout << "Enter Name: ";
+            getline(cin >> ws, input);
+            accounts[i].name = input;
+
+            cout << "Enter Address: ";
+            getline(cin >> ws, input);
+            accounts[i].address = input;
+
+            cout << "Enter City: ";
+            getline(cin >> ws, input);
+            accounts[i].city = input;
+
+            cout << "Enter State: ";
+            getline(cin >> ws, input);
+            accounts[i].state = input;
+
+            cout << "Enter Zip: ";
+            cin >> numInput;
+            accounts[i].zip = numInput;
+
+            cout << "Phone Number: ";
+            getline(cin >> ws, input);
+            accounts[i].phoneNumber = input;
+
+            cout << "Account Balance: ";
+            cin >> numInput;
+            accounts[i].accountBalance = numInput;
+
+            cout << "Date of Last Payment: ";
+            getline(cin >> ws, input);
+            accounts[i].dateOfLastPayment = input;
+        } else {
+            cout << "*******************" << endl << "No customer by that name found! Please try again" << endl << "*******************" << endl;
+        }
+    }
+}
+
+// Method to display all entries
+void displayAllEntries(vector<CustomerAccount> accounts) {
     cout << "Accounts" << endl << endl;
-    cout << "Name \t Address \t City, State, Zip \t Phone Number \t Account Balance \t Date of Last Payment" << endl;
-    for (int i = 0; i < size; i++) {
+    cout << "Name \t Address \t City State, Zip \t Phone Number \t Account Balance \t Date of Last Payment" << endl;
+    for (int i = 0; i < accounts.size(); i++) {
         cout << accounts[i].name << "\t";
-        cout << accounts[i].address << "\t";
-        cout << accounts[i].cityStateZip << "\t";
+        cout << accounts[i].address << "\t  ";
+        cout << accounts[i].city << " " << accounts[i].state << ", " << accounts[i].zip << "\t";
         cout << accounts[i].phoneNumber << "\t";
         cout << accounts[i].accountBalance << "\t\t\t";
         cout << accounts[i].dateOfLastPayment << "\t";
         cout << endl;
     }
-}
-
-void updateData(CustomerAccount accounts[], int size) {
-    int selection;
-    cout << "Please enter the number of the entry you wish to update" << endl;
-
-    for (int i = 0; i < size; i++) {
-        cout << i + 1 << endl;
-        cout << "Name: " << accounts[i].name << "\t" << endl;
-        cout << "Address: " << accounts[i].address << "\t" << endl;
-        cout << "City, State, Zip: " << accounts[i].cityStateZip << "\t" << endl;
-        cout << "Phone Number: " << accounts[i].phoneNumber << "\t" << endl;
-        cout << "Account Balance: " << accounts[i].accountBalance << "\t\t\t" << endl;
-        cout << "Date of Last Payment: " << accounts[i].dateOfLastPayment << "\t" << endl;
-        cout << endl;
-    }
-
-    cin >> selection;
-
-    cout << "Enter name: ";
-    cin >> accounts[selection-1].name;
-
-    cout << "Enter address: ";
-    cin >> accounts[selection-1].address;
-
-    cout << "Enter city, state, zip: ";
-    cin >> accounts[selection-1].cityStateZip;
-
-    cout << "Enter phone number: ";
-    cin >> accounts[selection-1].phoneNumber;
-
-    cout << "Enter account balance: ";
-    cin >> accounts[selection-1].accountBalance;
-
-    cout << "Enter date of last payment: ";
-    cin >> accounts[selection-1].dateOfLastPayment;
 }
